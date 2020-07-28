@@ -1,23 +1,53 @@
 const btns=document.querySelectorAll(".btn");
 
 const tax=document.querySelector("#tax").innerText;
+const taxWithoutComma=tax.replace(",","");
 const total=document.querySelector("#total").innerText;
+const totalWithoutComma=total.replace(",","");
 const subTotal=document.querySelector("#subTotal").innerText;
+const subTotalWithoutComma=subTotal.replace(",","");
 
-let subTotalNum=parseFloat(subTotal);
-let taxNum=parseFloat(tax);
-let totalNum=parseFloat(total);
+let subTotalNum=parseFloat(subTotalWithoutComma);
+
+let taxNum=parseFloat(taxWithoutComma);
+let totalNum=parseFloat(totalWithoutComma);
 const crosses=document.querySelectorAll(".remove-item");
+
+window.addEventListener("load",function(){
+    const prices=document.querySelectorAll(".price");
+    prices.forEach(function(price){
+        const priceWithoutComma=price.innerText.replace(",","");
+        intPrice=parseFloat(priceWithoutComma);
+        //console.log(intPrice);
+        subTotalNum+=intPrice;
+        
+
+    });
+    const subTotalNumWithComma=thousands_separators(subTotalNum);
+     //console.log(subTotalNum);
+     document.querySelector("#subTotal").innerText=subTotalNumWithComma;
+     finalCalc(subTotalNum);
+
+});
 
 
 function finalCalc(subtotal){
     taxNum=subtotal*0.1;  
     //console.log(taxNum);
-    document.querySelector("#tax").innerText=Math.round(taxNum);
+    const taxNumWithComma=thousands_separators(Math.round(taxNum));
+    document.querySelector("#tax").innerText=taxNumWithComma;
 
     totalNum=subtotal+taxNum;
-    document.querySelector("#total").innerText=totalNum;
+    const totalNumWithComma=thousands_separators(totalNum);
+    document.querySelector("#total").innerText=totalNumWithComma;
     }
+
+function thousands_separators(num)
+  {
+    var num_parts = num.toString().split(".");
+    num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return num_parts.join(".");
+  }
 
 
 
@@ -34,7 +64,9 @@ btns.forEach(function(btn){
 
     const price=e.currentTarget.parentElement.nextElementSibling.childNodes[1];
         //console.log(price);
-        const priceNum=parseFloat(price.innerText);
+        const priceWithoutComma=price.innerText.replace(",","");
+        //console.log(priceWithoutComma);
+        const priceNum=parseFloat(priceWithoutComma);
         //console.log(priceNum);
 
         price.style.display="none";
@@ -61,13 +93,15 @@ btns.forEach(function(btn){
 
         
         const incPrice=priceNum*qtyPlusNum;
-        e.currentTarget.parentElement.nextElementSibling.lastChild.innerText=incPrice;
+        const incPriceWithComma=thousands_separators(incPrice);
+        e.currentTarget.parentElement.nextElementSibling.lastChild.innerText=incPriceWithComma;
         //console.log('incPrice',incPrice);
         
         
         subTotalNum+=priceNum;
         //console.log('subTotal',subTotalNum);
-        document.querySelector("#subTotal").innerText=subTotalNum;
+        const subTotalNumWithComma=thousands_separators(subTotalNum);
+        document.querySelector("#subTotal").innerText=subTotalNumWithComma;
 
        
         finalCalc(subTotalNum);
@@ -112,14 +146,15 @@ btns.forEach(function(btn){
         let decPrice=qtyMinusNum*priceNum;
 
         if(decPrice>0){
-        
+            const decPriceWithComma=thousands_separators(decPrice);
         //console.log(decPrice);
-        e.currentTarget.parentElement.nextElementSibling.lastChild.innerText=decPrice;
+        e.currentTarget.parentElement.nextElementSibling.lastChild.innerText=decPriceWithComma;
         }
         
         subTotalNum-=priceNum;
+        const subTotalNumWithComma=thousands_separators(subTotalNum);
         //console.log('subTotal',subTotalNum);
-        document.querySelector("#subTotal").innerText=subTotalNum;
+        document.querySelector("#subTotal").innerText=subTotalNumWithComma;
 
         finalCalc(subTotalNum);
 
@@ -131,7 +166,8 @@ btns.forEach(function(btn){
         
         
         decPrice=qtyMinusNum*priceNum;
-        e.currentTarget.parentElement.nextElementSibling.lastChild.innerText=decPrice;
+        const decPriceWithComma=thousands_separators(decPrice);
+        e.currentTarget.parentElement.nextElementSibling.lastChild.innerText=decPriceWithComma;
        
         
         
@@ -159,11 +195,13 @@ crosses.forEach(function(cross){
         cross.addEventListener("click",function(e){
             //console.log(e);
             const removeValue=e.currentTarget.previousElementSibling.lastChild.innerText;
-            const removeValueNum=parseFloat(removeValue);
+            const removeValueWithoutComma=removeValue.replace(",","");
+            const removeValueNum=parseFloat(removeValueWithoutComma);
             //console.log(removeValueNum);
 
             const initialAmount= e.currentTarget.previousElementSibling.childNodes[1].innerText;
-                  const initialAmountNum=parseFloat(initialAmount);
+            const initialAmountWithoutComma=initialAmount.replace(",","");
+                  const initialAmountNum=parseFloat(initialAmountWithoutComma);
                   //console.log(initialAmountNum);
 
                   if(isNaN(removeValueNum)){
@@ -177,10 +215,12 @@ crosses.forEach(function(cross){
                  }
 
                  const mainValue=document.querySelector("#subTotal").innerText;
-                 const mainValueNum=parseFloat(mainValue);
+                 const mainValueWithoutComma=mainValue.replace(",","");
+                 const mainValueNum=parseFloat(mainValueWithoutComma);
                 // console.log(mainValue);
                 const final=mainValueNum-subValue;
-                document.querySelector("#subTotal").innerText=final;
+                const finalWithComma=thousands_separators(final);
+                document.querySelector("#subTotal").innerText=finalWithComma;
                 finalCalc(final);
 
 
